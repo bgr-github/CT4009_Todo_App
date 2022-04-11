@@ -1,0 +1,226 @@
+/* All Modals */
+.modal-bg {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s opacity 0.5s;
+}
+
+.bg-active {
+  visibility: visible;
+  opacity: 1;
+}
+
+.close-button {
+  float: right;
+  width: 25px;
+  height: 25px;
+  background: #e84118;
+  text-align: center;
+  font-weight: 700;
+}
+
+.close-button:hover {
+  background: #c23616;
+  cursor: pointer;
+}
+
+/* Create Todo Modal
+==================== */
+
+.mdlCreateTodo {
+  width: 30%;
+  height: 45%;
+  margin: auto;
+  position: absolute;
+  background: #2f3640;
+
+  visibility: hidden;
+  opacity: 0;
+}
+
+.mdlCreateGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 0.2fr 0.3fr 2.5fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    "mdlCreateClose"
+    "mdlCreateTitle"
+    "mdlCreateContent";
+}
+
+.mdlCreateClose {
+  grid-area: mdlCreateClose;
+}
+
+.mdlCreateTitle {
+  grid-area: mdlCreateTitle;
+  text-align: center;
+}
+
+.mdlCreateContent {
+  grid-area: mdlCreateContent;
+}
+
+.mdlCreateContent form {
+  width: 60%;
+  margin-left: 20%;
+}
+
+.mdlCreateContent input {
+  width: 50%;
+}
+
+.createPriority {
+  float: right;
+  width: 45%;
+}
+
+/* Edit Todo Modal
+================== */
+
+.mdlEditTodo {
+  width: 30%;
+  height: 45%;
+  margin: auto;
+  position: absolute;
+  background: #2f3640;
+
+  visibility: hidden;
+  opacity: 0;
+}
+
+.mdlEditGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 0.2fr 0.3fr 2.5fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    "mdlEditClose"
+    "mdlEditTitle"
+    "mdlEditContent";
+}
+
+.mdlEditClose {
+  grid-area: mdlEditClose;
+}
+
+.mdlEditTitle {
+  grid-area: mdlEditTitle;
+  text-align: center;
+}
+
+.mdlEditContent {
+  grid-area: mdlEditContent;
+}
+
+.mdlEditContent form {
+  width: 60%;
+  margin-left: 20%;
+}
+
+.mdlEditContent input {
+  width: 50%;
+}
+
+.editPriority {
+  float: right;
+  width: 45%;
+}
+
+/* Map Modal
+============ */
+
+.mdlMap {
+  width: 60%;
+  height: 70%;
+  margin: auto;
+  position: absolute;
+  background: #2f3640;
+
+  visibility: hidden;
+  opacity: 0;
+}
+
+.mdlMapGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 0.2fr 0.3fr 2.5fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    "mdlMapClose"
+    "mdlMapTitle"
+    "mdlMapContent";
+}
+
+.mdlMapClose {
+  grid-area: mdlMapClose;
+}
+
+.mdlMapTitle {
+  grid-area: mdlMapTitle;
+  text-align: center;
+}
+
+.mdlMapContent {
+  grid-area: mdlMapContent;
+  width: 100%;
+  height: 100%;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+/* Help Modal
+============= */
+
+.mdlHelp {
+  width: 50%;
+  height: 70%;
+  margin: auto;
+  position: absolute;
+  background: #2f3640;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.mdlHelpGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 0.2fr 0.3fr 2.5fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    "mdlHelpClose"
+    "mdlHelpTitle"
+    "mdlHelpContent";
+}
+
+.mdlHelpClose {
+  grid-area: mdlHelpClose;
+}
+
+.mdlHelpTitle {
+  grid-area: mdlHelpTitle;
+  text-align: center;
+}
+
+.mdlHelpContent {
+  grid-area: mdlHelpContent;
+}
+
+/* This block must be at the bottom as it needs the highest precedence */
+.modal-active {
+  visibility: visible;
+  opacity: 1;
+}

@@ -1,0 +1,112 @@
+* {
+  /* margin: 0;
+  padding: 0; */
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  background: #353b48;
+  color: #f5f6fa;
+}
+
+/* Grid Properties */
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 25% 1fr;
+  grid-template-rows: 1fr 2fr 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    "title-area title-area"
+    "navigation todos"
+    "commands todos";
+}
+
+.title-area {
+  grid-area: title-area;
+}
+
+.todos {
+  grid-area: todos;
+  background: #2f3640;
+}
+
+.navigation {
+  grid-area: navigation;
+}
+
+.commands {
+  grid-area: commands;
+}
+
+/* Styles */
+
+a {
+  color: #f5f6fa;
+}
+
+a:hover {
+  color: #fbc531;
+}
+
+.complete {
+  text-decoration: line-through;
+}
+
+ul {
+  list-style-type: none;
+}
+
+ul li a {
+  display: block;
+  padding: 10px;
+  text-decoration: none;
+}
+
+table {
+  width: 100%;
+  text-align: center;
+}
+
+.todos table th {
+  font-size: 20px;
+}
+
+input,
+select {
+  background: #353b48;
+  border-top-style: hidden;
+  border-right-style: hidden;
+  border-left-style: hidden;
+  border-bottom-style: hidden;
+  color: #f5f6fa;
+}
+
+input:focus {
+  outline: none;
+}
+
+.todosSelected {
+  color: #718093;
+}
+
+button {
+  background-color: #e84118;
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+}
+
+button:hover {
+  background-color: #c23616;
+  cursor: pointer;
+}

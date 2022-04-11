@@ -1,0 +1,228 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo List</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="assets/css/modals.css" />
+  </head>
+  <body>
+    <div id="app">
+      <div class="grid-container">
+        <div class="title-area"><h1>Todo List</h1></div>
+        <div class="todos">
+          <!-- The table which contains our todos -->
+          <table>
+            <tr style="color: #fbc531">
+              <th></th>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Priority</th>
+              <th>Due Date</th>
+              <th>Time Due</th>
+              <th>Status</th>
+              <th>Images</th>
+              <!-- I haven't labelled the todo or edit buttons as it will say "edit" and "delete" on the buttons -->
+              <th><!-- Delete Button --></th>
+              <th><!-- Edit Button --></th>
+            </tr>
+            <!-- We use VueJS's v-for binding to create a "foreach" loop
+               This creates a new row for each todo with the correct information. -->
+            <tr v-for="todo in todos">
+              <td><input v-model="todo.selected" type="checkbox" /></td>
+              <!-- We have a VueJS class binding here, which adds the class "complete"
+                 if the todo has the boolean isComplete set to true in the database. -->
+              <td :class="{'complete': todo.isComplete}">{{ todo.title }}</td>
+
+              <!-- If the todo is truncated, only show 25 characters of the description. If it's clicked, the
+              whole description will be visible. -->
+              <td style="cursor: pointer" @click="todo.truncated = !todo.truncated" v-if="todo.truncated">
+                {{ todo.description | truncate(25, '...') }}
+              </td>
+              <td style="width: 24%; cursor: pointer" @click="todo.truncated = !todo.truncated" v-else>
+                {{ todo.description }}
+              </td>
+              <td><p>{{ todo.priority }}</p></td>
+              <td><p>{{ todo.dueDate }}</p></td>
+              <td>
+                <p>{{ todo.timeDue }}</p>
+              </td>
+              <!-- Conditional rendering for the "complete", too. If the task is complete we have a thumbs up.
+                 if we have not completed it, we have a thumbs down. -->
+              <td style="cursor: pointer" @click="completeTodo(todo)">
+                <p v-if="todo.isComplete">👍</p>
+                <p v-else>👎</p>
+              </td>
+              <td><a href="#">Click Here</a></td>
+              <td><button @click="removeTodo(todo)">Delete</button></td>
+              <td><button @click="modalController('edittodo', todo)">Edit</button></td>
+            </tr>
+            <tr></tr>
+          </table>
+          <!-- WARNING: Messy Modal Code. Couldn't get data to switch inside as Vue Router didn't allow class bindings inside JS template -->
+          <div :class="{'bg-active': modals.background}" class="modal-bg">
+            <!-- Create Todo Modal -->
+            <div :class="{'modal-active': modals.createTodo}" class="mdlCreateTodo">
+              <div class="mdlCreateGrid">
+                <div class="mdlCreateClose"><span @click="modalController('close')" class="close-button">✕</span></div>
+                <div class="mdlCreateTitle"><h1>Create Task</h1></div>
+                <div class="mdlCreateContent">
+                  <form class="addTodoForm" @submit.prevent="addTodo">
+                    <!-- <label for="title">Title</label> -->
+                    <input placeholder="Title" name="title" v-model="newTodo.title" type="text" />
+
+                    <div class="createPriority">
+                      <select style="width: 100%" v-model="newTodo.priority" name="priority" id="priority">
+                        <option value="" disabled selected>Priority</option>
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                      </select>
+                    </div>
+
+                    <br /><br />
+
+                    <input
+                      style="width: 100%"
+                      placeholder="Description..."
+                      name="description"
+                      v-model="newTodo.description"
+                      type="text"
+                    />
+
+                    <br /><br />
+
+                    <input style="width: 50%" name="dueDate" v-model="newTodo.dueDate" type="date" />
+                    <input style="width: 45%; float: right" name="dueTime" v-model="newTodo.timeDue" type="time" />
+
+                    <br /><br />
+
+                    <input name="images" v-model="newTodo.images" type="file" multiple />
+                    <input
+                      style="float: right; width: 45%"
+                      placeholder="Location (Lat, Long)"
+                      name="location"
+                      v-model="newTodo.location"
+                      type="text"
+                    />
+
+                    <br /><br />
+
+                    <button @click="modalController('close')" style="width: 100%" type="submit" name="button">
+                      Create
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <!-- Edit Todo Modal -->
+            <div :class="{'modal-active': modals.editTodo}" class="mdlEditTodo">
+              <div class="mdlEditGrid">
+                <div class="mdlEditClose"><span @click="modalController('close')" class="close-button">✕</span></div>
+                <div class="mdlEditTitle"><h1>Edit Task</h1></div>
+                <div class="mdlEditContent">
+                  <form class="addTodoForm" @submit.prevent="editTodo">
+                    <input placeholder="Title" name="title" v-model="editingTodo.title" type="text" />
+
+                    <div class="editPriority">
+                      <select style="width: 100%" v-model="editingTodo.priority" name="priority" id="priority">
+                        <option value="" disabled selected>Priority</option>
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                      </select>
+                    </div>
+
+                    <br /><br />
+
+                    <input
+                      style="width: 100%"
+                      placeholder="Description..."
+                      name="description"
+                      v-model="editingTodo.description"
+                      type="text"
+                    />
+
+                    <br /><br />
+
+                    <input style="width: 50%" name="dueDate" v-model="editingTodo.dueDate" type="date" />
+                    <input style="width: 45%; float: right" name="dueTime" v-model="editingTodo.timeDue" type="time" />
+
+                    <br /><br />
+
+                    <input name="images" v-model="editingTodo.images" type="file" multiple />
+                    <input
+                      style="float: right; width: 45%"
+                      placeholder="Location (Lat, Long)"
+                      name="location"
+                      v-model="editingTodo.location"
+                      type="text"
+                    />
+
+                    <br /><br />
+
+                    <button @click="modalController('close')" style="width: 100%" type="submit" name="button">
+                      Save
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <!-- Help Modal -->
+            <div :class="{'modal-active': modals.help}" class="mdlhelp">
+              <div class="mdlHelpGrid">
+                <div class="mdlHelpClose"><span @click="modalController('close')" class="close-button">✕</span></div>
+                <div class="mdlHelpTitle"><h1>Help</h1></div>
+                <div class="mdlHelpContent">
+                  <p style="text-align: center">This is a quickstart guide on how to use the application</p>
+                  <ol>
+                    <li>
+                      To add a todo via the map, just click in a location you'd like the todo to be and you'll be
+                      greeted with a menu
+                    </li>
+                    <li>To edit a todo via the map, just click the pin and a menu will appear.</li>
+                    <li>
+                      To mark a todo as completed, click the thumbs down button (and thumbs up button to un-complete)
+                    </li>
+                    <li>You can drag and drop a pin on the map to change the task's location</li>
+                    <li>To expand the description, just click on it</li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+            <!-- Map Modal -->
+            <div :class="{'modal-active': modals.map}" class="mdlMap">
+              <div class="mdlMapGrid">
+                <div class="mdlMapClose"><span @click="modalController('close')" class="close-button">✕</span></div>
+                <div class="mdlMapTitle"><h1>Map</h1></div>
+                <div id="map" class="mdlMapContent"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="navigation">
+          <!-- Navigation bar to filter our todos to a daily, weekly or monthly view. -->
+          <ul>
+            <li><a @click.prevent="getTodos()" href="#">All Todos</a></li>
+            <li><a @click.prevent="getTodos('daily')" href="#">Daily Todos</a></li>
+            <li><a @click.prevent="getTodos('weekly')" href="#">Weekly Todos</a></li>
+            <li><a @click.prevent="getTodos('monthly')" href="#">Monthly Todos</a></li>
+          </ul>
+        </div>
+        <div class="commands">
+          <ul>
+            <li>
+              <a @click.prevent="modalController('addtodo')" href="#">Create Todo</a>
+            </li>
+            <li><a @click.prevent="modalController('map')" href="#">View Map</a></li>
+            <li><a @click.prevent="modalController('help')" href="#">Help</a></li>
+            <li><a @click.prevent="removeSelected()" href="#">Delete Selected</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="assets/js/app.js"></script>
+  </body>
+</html>
